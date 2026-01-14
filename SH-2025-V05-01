@@ -1,0 +1,41 @@
+#A Python Program to Compute Recombination (Generation) Rate in SCR of a p-n Junction
+#ID: SH-2025-V05-01
+#Contributors: Rupam Goswami[1], Deepjyoti Deb[2]
+#Affiliation [1]: TSDL, Department of Electronics and Communication Engineering, Tezpur University, Assam, India
+#Affiliation [2]: Department of Electronics and Communication Engineering, SRM IST, Chennai, India
+#This work is licensed under Creative Commons Attribution-ShareAlike 4.0 International
+
+#NOTE: In the total current in SH-2025-V04-06, it is ideally assumed that there is no generation or recombination of carriers
+#in the space-charge (depletion) region (SCR) of a p-n junction. This makes derivation of the total current mathematically convenient.
+#In reality, this is not the case. The recombination rate is the largest when p ~ n, that is, using pn = (n_i^2)exp(qV/kT), one can
+#find the value of p or n. This is used as the basis to derive the recombination (generation) rate in SCR.
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+#Constants
+n_i = 1.5e10         #Intrinsic carrier concentration in silicon (cm^-3)
+k = 8.617e-5         #Boltzmann constant (eV/K)
+T = 300              #Temperature (K)
+tau_dep=1e-6         #Recombination (generation) time (s)
+
+#PLOTTING VERSUS APPLIED BIAS
+#Applied Bias
+V_app=np.linspace(-0.7,0.7,100)    #Varying applied bias
+
+#Recombination (generation) Rate in SCR
+R = abs((n_i/tau_dep)*((np.exp((V_app)/(2*k*T)))-1))   #-1 is present in the expression so that R = 0 when V_app = 0
+
+# 2D plot of Total Current Density vs. Position
+plt.figure(figsize=(10, 6))
+plt.plot(V_app, R)
+plt.yscale('log')
+
+# Add labels and title
+plt.xlabel('Applied Bias, V$_{app}$ (V)')
+plt.ylabel('Recombination (Generation) Rate (cm$^{-3}$s$^{-1}$)')
+plt.title('Recombination (Generation) Rate in SCR of p-n Junction vs. Applied Bias')
+plt.grid(True)
+
+# Display the plot
+plt.show()
