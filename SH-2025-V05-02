@@ -1,0 +1,115 @@
+#A Python Program to Compute Total Current Density in a p-n Junction Considering SCR Generation (Recombination)
+#ID: SH-2025-V05-02
+#Contributors: Deepjyoti Deb, Rupam Goswami
+#Affiliation: TSDL, Department of Electronics and Communication Engineering, Tezpur University
+#This work is licensed under Creative Commons Attribution-ShareAlike 4.0 International
+
+#NOTE: Minority hole concentration is computed in n-type region in which holes are minority carriers.
+#Minority electron concentration is computed in p-type region in which electrons are minority carriers.
+#Material/ Bias specific values may be changed as per requirement of the user.
+#This code is a combination of SH-2025-V04-06 and SH-2025-V05-01.
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+#Constants
+q = 1.6e-19          #Electronic charge (C)
+n_i = 1.5e10         #Intrinsic carrier concentration in silicon (cm^-3)
+Nd = 5e17            #Doping concentration (donor) in n-type region (cm^-3)
+Na = 1e18            #Doping concentration (acceptor) in p-type region (cm^-3)
+k = 8.617e-5         #Boltzmann constant (eV/K)
+T = 300              #Temperature (K)
+V_app=0.6            #Applied Bias (V)
+D_n=12               #Diffusion Constant for electrons in p-type region (cm^2/s)
+D_p=12               #Diffusion Constant for holes in n-type region (cm^2/s)
+tau_n=1e-6           #Minority Carrier Lifetime for electrons in p-type region (s)
+tau_p=1e-6           #Minority Carrier Lifetime for holes in n-type region (s)
+tau_dep=1e-6         #Recombination (generation) in SCR time (s) 
+w_n=0                #Depletion width in n-type region (See assumptions, A1 and A2 below to know why it is zero.)
+w_p=0                #Depletion width in p-type region (See assumptions, A1 and A2 below to know why it is zero.)
+eps_0 = 8.85e-14      #Vacuum permittivity (F/cm)
+eps_si = 11.7*eps_0   #Silicon permittivity (F/cm)
+
+#PLOTTING VERSUS POSITION
+#Length for plot
+x_p=np.linspace(-7e-3,w_p,100)    #Position along the p-type region, edge of depletion region at 0, assumed to be smaller than the scale of xp (A1)
+x_n=np.linspace(w_n,7e-3,100)     #Position along the n-type region, edge of depletion region at 0, assumed to be smaller than the scale of xp (A2)
+
+#Description of the assumptions, A1 and A2
+#Here, xn and xp are the depletion region widths in the p-type and n-type regions. Actually, they have a finite width because w_n + w_p = total depletion
+#width at the junction. However, in order to simplify the calculation, and because the order of w_n (or w_p) is quite smaller than the scale of x_n (or x_p),
+#w_n = w_p ~ 0 is taken as a suitable assumption.
+
+# _____________ _____________
+#|             |             |
+#|  p-type     |    n-type   |
+#|_____________|_____________|
+#          w_n, w_p
+#--------------0----------------> Position, x
+
+
+#PLOTTING VERSUS APPLIED BIAS
+#Applied Bias
+V_app=np.linspace(-0.7,0.7,100)    #Varying applied bias
+
+#Values of Position
+x_n=w_n;
+x_p=w_p;
+
+#Expression of electron (minority carrier) concentration at the edge of the depletion region in p-type region
+n_p=((n_i**2)/Na)*np.exp(V_app/(k*T))
+
+#Expression of hole (minority carrier) concentration at the edge of the depletion region in n-type region
+p_n=((n_i**2)/Nd)*np.exp(V_app/(k*T))
+
+#Expression of excess electron (minority carrier) concentration at the edge of the p-type region
+dn_p=n_p-((n_i**2)/Na);
+
+#Expression of excess hole (minority carrier) concentration at the edge of the n-type region
+dp_n=p_n-((n_i**2)/Nd);
+
+#Expression of excess electron (minority carrier) concentration in the p-type region
+L_n=np.sqrt(D_n*tau_n);
+dn_p_x=dn_p*np.exp((x_p-w_p)/(L_n))
+
+#Expression of excess hole (minority carrier) concentration in the n-type region
+L_p=np.sqrt(D_p*tau_p);
+dp_n_x=dp_n*np.exp((-x_n+w_n)/(L_p))
+
+#Minority Carrier Current Densities at the Edges of the Depletion Region
+#Minority Carrier Current is dominated by diffusion.
+Jp_n_depedge=q*D_p*(1/L_p)*dp_n             #dp_n_x at xn = w_n
+Jn_p_depedge=q*D_n*(1/L_n)*dn_p             #dn_p_x at xp = w_p
+
+#Total Current Density
+J_Total_ideal=Jn_p_depedge+Jp_n_depedge           #Total current density is equal to sum of current densities at the edges of depletion region
+#----------------------J_Total_ideal gives the pn junction current density without SCR current contributions, assuming w_n = w_p ~ 0--------------
+ 
+#----------------------This section consists of the contributions due to SCR --------------------------------------------------------------------
+phi_b=k*T*np.log((Na*Nd)/(n_i**2))
+W_dep = np.sqrt(((2* eps_si* (phi_b-V_app))* ((1/Na) + (1/Nd))) / q)
+
+#Recombination (generation) Rate in SCR
+R = abs((n_i/tau_dep)*((np.exp((V_app)/(2*k*T)))-1))   #-1 is present in the expression so that R = 0 when V_app = 0
+
+#Current Density in SCR
+J_SCR=q*R*W_dep
+
+#Total current density as a sum of ideal current density, J_Total_ideal and current density due to SCR, J_SCR
+J_Total=J_Total_ideal+J_SCR
+
+# 2D plot of Total Current Density vs. Position
+plt.figure(figsize=(10, 6))
+plt.plot(V_app, abs(J_Total_ideal),label="Without SCR Contributions")
+plt.plot(V_app, abs(J_Total),label="With SCR Contributions")
+plt.yscale('log')
+
+# Add labels and title
+plt.xlabel('Applied Bias, V$_{app}$ (V)')
+plt.ylabel('Current Density (A/cm$^{-2}$)')
+plt.title('Total Current Density including SCR Contributions vs. Applied Bias')
+plt.grid(True)
+plt.legend()
+
+# Display the plot
+plt.show()
