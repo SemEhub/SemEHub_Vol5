@@ -105,7 +105,7 @@ I_Total_ideal=J_Total_ideal*CSA
 G = I_Total_ideal/(k*T)                 #G = d(I_Total_ideal)/d(V_app)
 
 #Expression of Diffusion Capacitance, C_diff
-C_diff = tau_s*I_Total_ideal/(k*T)      #C_diff = dQ/dV_app = tau_s*d(I_Total_ideal)/d(V_app) = tau_s*G showing that in strong forward bias, C_diff/G = tau_s or RC = tau_s = time constant
+C_diff = tau_s*I_Total_ideal/(k*T)      #C_diff = dQ/dV_app = tau_s*d(I_Total_ideal)/d(V_app) = tau_s*G showing that in strong forward bias, C_diff/G = tau_s or RC_diff = tau_s = time constant
 
 #Expression of Depletion Capacitance, C_dep
 phi_b=k*T*np.log((Na*Nd)/(n_i**2))                                           #Built-in potential
