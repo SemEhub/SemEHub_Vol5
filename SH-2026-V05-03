@@ -28,7 +28,7 @@ tau_p=1e-6           #Minority Carrier Lifetime for holes in n-type region (s)
 tau_s=1e-6           #Charge Storage Time (s)
 w_n=0                #Depletion width in n-type region (See assumptions, A1 and A2 below to know why it is zero.)
 w_p=0                #Depletion width in p-type region (See assumptions, A1 and A2 below to know why it is zero.)
-CSA=1e-8             #CSA = cross sectional area along current direction (cm^2)
+CSA=1                #CSA = cross sectional area along current direction (cm^2)
                      #    = Height of p (or n) region x Width of the device (not depletion width)
 
 
@@ -89,7 +89,7 @@ J_Total_ideal=Jn_p_depedge+Jp_n_depedge           #Total current density is equa
 #Total Current
 I_Total_ideal=J_Total_ideal*CSA                               
 
-#Small Signal Model (V_app, I, R (or G), C)
+#Small Signal Model (V_app, I, R (or G), Diffusion or Charge Storage Capacitance, C)
 # ---->------------------------------
 # ^   I            |                |
 # |                |                |
@@ -101,7 +101,7 @@ I_Total_ideal=J_Total_ideal*CSA
 # |                |                |
 # v----------------------------------
 
-#Expressions of G and C
+#Expressions of G and C: C/G is the RC delay of the diode
 G = I_Total_ideal/(k*T)                 #G = d(I_Total_ideal)/d(V_app)
 C = tau_s*I_Total_ideal/(k*T)           #C = dQ/dV_app = tau_s*d(I_Total_ideal)/d(V_app) = tau_s*G showing that C/G = tau_s or RC = tau_s = time constant
 
