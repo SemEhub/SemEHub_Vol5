@@ -87,28 +87,40 @@ Jn_p_depedge=q*D_n*(1/L_n)*dn_p             #dn_p_x at xp = w_p
 J_Total_ideal=Jn_p_depedge+Jp_n_depedge           #Total current density is equal to sum of current densities at the edges of depletion region
 
 #Total Current
-I_Total_ideal=J_Total_ideal*CSA                               
+I_Total_ideal=J_Total_ideal*CSA
 
 #Small Signal Model (V_app, I, R (or G), Diffusion or Charge Storage Capacitance, C)
-# ---->------------------------------
-# ^   I            |                |
-# |                |                |
-# |                /                | 
-# |                \ R=1/G        _____ C
-# V_app            /              _____ 
-# |                \                |
-# |                |                |
-# |                |                |
-# v----------------------------------
+# ---->---------------------------------------------------
+# ^   I            |                |                    |
+# |                |                |                    |
+# |                /                |                    |
+# |                \ R=1/G        _____ C_diff         ______ C_dep
+# V_app            /              _____                ______
+# |                \                |                    |
+# |                |                |                    |
+# |                |                |                    |
+# v-------------------------------------------------------
 
-#Expressions of G and C: C/G is the RC delay of the diode
+#Expressions of G
 G = I_Total_ideal/(k*T)                 #G = d(I_Total_ideal)/d(V_app)
-C = tau_s*I_Total_ideal/(k*T)           #C = dQ/dV_app = tau_s*d(I_Total_ideal)/d(V_app) = tau_s*G showing that C/G = tau_s or RC = tau_s = time constant
+
+#Expression of Diffusion Capacitance, C_diff
+C_diff = tau_s*I_Total_ideal/(k*T)      #C_diff = dQ/dV_app = tau_s*d(I_Total_ideal)/d(V_app) = tau_s*G showing that in strong forward bias, C_diff/G = tau_s or RC = tau_s = time constant
+
+#Expression of Depletion Capacitance, C_dep
+phi_b=k*T*np.log((Na*Nd)/(n_i**2))                                           #Built-in potential
+W_dep = np.sqrt(((2* eps_si* (phi_b-V_app))* ((1/Na) + (1/Nd))) / q)         #Depletion width
+C_dep = CSA*eps_si/W_dep                                                     #C_dep = depletion capacitance
+
+#Expression of total capacitance
+C_Total = C_diff + C_dep               #Total capacitance
 
 # 2D plot of Total Current Density vs. Position
 plt.figure(figsize=(10, 6))
 plt.plot(V_app, abs(G), label='Conductance')
-plt.plot(V_app, abs(C), label='Capacitance')
+plt.plot(V_app, abs(C_diff), label='Diffusion Capacitance')
+plt.plot(V_app, abs(C_dep), label='Depletion Capacitance')
+plt.plot(V_app, abs(C_Total), label='Total Capacitance')
 plt.yscale('log')
 
 # Add labels and title
