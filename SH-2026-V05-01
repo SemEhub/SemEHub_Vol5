@@ -26,7 +26,7 @@ V_app=np.linspace(-0.7,0.7,100)    #Varying applied bias
 #Recombination (generation) Rate in SCR
 R = abs((n_i/tau_dep)*((np.exp((V_app)/(2*k*T)))-1))   #-1 is present in the expression so that R = 0 when V_app = 0
 
-# 2D plot of Total Current Density vs. Position
+# 2D plot of Total Current Density vs. Applied Bias
 plt.figure(figsize=(10, 6))
 plt.plot(V_app, R)
 plt.yscale('log')
