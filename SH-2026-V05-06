@@ -1,0 +1,57 @@
+#A Python Program to Compute Open Circuit Voltage in a p+n Solar Cell
+#ID: SH-2026-V05-06
+#Contributors: Rupam Goswami[1], Deepjyoti Deb[2]
+#Affiliation [1]: TSDL, Department of Electronics and Communication Engineering, Tezpur University, Assam, India
+#Affiliation [2]: Department of Electronics and Communication Engineering, SRM IST, Chennai, India
+#This work is licensed under Creative Commons Attribution-ShareAlike 4.0 International
+
+#NOTE: Minority hole concentration is computed in n-type region in which holes are minority carriers.
+#Minority electron concentration is computed in p-type region in which electrons are minority carriers.
+#Material/ Bias specific values may be changed as per requirement of the user.
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+#Constants
+q = 1.6e-19          #Electronic charge (C)
+n_i = 1.5e10         #Intrinsic carrier concentration in silicon (cm^-3)
+Nd = 1e17            #Doping concentration (donor) in n-type region (cm^-3)
+k = 8.617e-5         #Boltzmann constant (eV/K)
+T = 300              #Temperature (K)
+D_p=12               #Diffusion Constant for holes in n-type region (cm^2/s)
+CSA=1                #CSA = cross sectional area along current direction (cm^2)
+G=1e12               #Generation rate in cm^-3 s^-1
+
+#NOTE: We assume a P+N solar cell with a very thin p+ region such that all EHPs are generated
+#in the n-type region at a rate of G cm^-3 s^-1. 
+
+#  ------------>-------Isc---------->---------------
+#  |                                               |
+#  |     ________  __________________________      |
+#  |    |         |                          |     |
+#  |----|  p+     |    n-type                |-----|
+#       |_________|__________________________|
+#-----------------0----------------> Position, x
+
+
+#PLOTTING VERSUS MINORITY CARRIER LIFETIME
+#Minority Carrier Lifetime
+tau_p=np.linspace(1e-8,1e-4,100)    #Varying applied bias
+
+#Open Circuit Voltage
+V_oc=k*T*np.log((tau_p*G*Nd)/(n_i**2))
+
+# 2D plot of Total Current Density vs. Position
+plt.figure(figsize=(10, 6))
+plt.plot(tau_p, V_oc)
+plt.yscale('log')
+plt.xscale('log')
+
+# Add labels and title
+plt.xlabel('Minority Carrier Lifetime,'r'$\tau$''$_{p}$(s)')
+plt.ylabel(' Open Circuit Voltage, V$_{oc}$ (V)')
+plt.title('Open circuit voltage in a p+n solar cell vs. Minority carrier lifetime')
+plt.grid(True)
+
+# Display the plot
+plt.show()
