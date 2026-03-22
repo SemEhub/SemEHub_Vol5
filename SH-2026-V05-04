@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 #Constants
 q = 1.6e-19          #Electronic charge (C)
 n_i = 1.5e10         #Intrinsic carrier concentration in silicon (cm^-3)
-Nd = 1e18            #Doping concentration (donor) in n-type region (cm^-3)
+Nd = 1e16            #Doping concentration (donor) in n-type region (cm^-3)
 k = 8.617e-5         #Boltzmann constant (eV/K)
 T = 300              #Temperature (K)
 V_app=0.6            #Applied Bias (V)
