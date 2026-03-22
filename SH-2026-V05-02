@@ -100,7 +100,7 @@ J_SCR=q*R*W_dep
 #Total current density as a sum of ideal current density, J_Total_ideal and current density due to SCR, J_SCR
 J_Total=J_Total_ideal+J_SCR
 
-# 2D plot of Total Current Density vs. Position
+# 2D plot of Total Current Density vs. Applied Bias
 plt.figure(figsize=(10, 6))
 plt.plot(V_app, abs(J_Total_ideal),label="Without SCR Contributions")
 plt.plot(V_app, abs(J_Total),label="With SCR Contributions")
