@@ -115,7 +115,7 @@ C_dep = CSA*eps_si/W_dep                                                     #C_
 #Expression of total capacitance
 C_Total = C_diff + C_dep               #Total capacitance
 
-# 2D plot of Total Current Density vs. Position
+# 2D plot of Total Current Density vs. Applied Bias
 plt.figure(figsize=(10, 6))
 plt.plot(V_app, abs(G), label='Conductance')
 plt.plot(V_app, abs(C_diff), label='Diffusion Capacitance')
