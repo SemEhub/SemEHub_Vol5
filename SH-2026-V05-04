@@ -42,7 +42,7 @@ L_p=np.linspace(1e-3,8e-3,100)    #Varying diffusion length of holes in n-type r
 #Short Circuit Current
 I_sc=q*G*L_p*CSA
 
-# 2D plot of Total Current Density vs. Position
+# 2D plot of Total Current Density vs. Diffusion Length
 plt.figure(figsize=(10, 6))
 plt.plot(L_p, I_sc)
 plt.yscale('log')
